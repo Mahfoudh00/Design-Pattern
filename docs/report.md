@@ -50,3 +50,36 @@ L'objectif était d'améliorer la lisibilité et la maintenabilité du code en a
 ## Conclusion
 Ces modifications visent à rendre le code plus lisible et à faciliter la gestion des opérations liées aux fichiers. Des ajustements ont été faits pour mieux respecter les principes SOLID.
 
+
+# Rapport sur les Modifications de Code
+
+## Objectif
+L'objectif de cette itération était d'ajouter la fonctionnalité permettant de marquer une tâche comme terminée, ainsi que de filtrer l'affichage des tâches en fonction de leur statut.
+
+## Travaux Réalisés
+- **Ajout du Paramètre `--done`:** Un nouveau paramètre en ligne de commande, `-d` ou `--done`, a été introduit pour indiquer si une tâche est terminée lors de son ajout.
+- **Affichage des Tâches Terminées:** Lors de l'affichage de toutes les tâches (`list`), celles marquées comme terminées sont préfixées par "Done: ".
+- **Filtrage par Statut:** L'utilisation du paramètre `--done` lors de la commande `list` permet de n'afficher que les tâches terminées.
+
+## Ce qui a Aidé
+- **Clarté du Paramètre `--done`:** L'introduction d'un paramètre distinct pour indiquer le statut de la tâche a simplifié la logique.
+- **Principes SOLID:** Les principes SOLID ont continué à guider le processus d'amélioration du code.
+
+## Difficultés Rencontrées
+- **Gestion de l'État des Tâches:** La gestion de l'état des tâches a ajouté une complexité supplémentaire, notamment dans la logique d'insertion.
+
+## Ce qui n'a pas Aidé
+- **Réutilisation de Code:** La logique d'insertion aurait pu être réutilisée pour les fichiers JSON et CSV, mais elle nécessitait des ajustements supplémentaires pour prendre en compte le nouveau paramètre.
+
+## Changements Apportés
+- **Méthode `handleInsertCommand`:** Ajustée pour prendre en compte le paramètre `--done`.
+- **Méthode `listTodos`:** Modifiée pour afficher le préfixe "Done: " devant les tâches terminées.
+
+## Commentaires dans le Code
+Le code a été commenté pour expliquer les modifications apportées, en particulier dans les méthodes `handleInsertCommand` et `listTodos`.
+
+## Architecture
+<!-- Insérez le lien vers le diagramme UML ici -->
+
+## Conclusion
+Cette itération a ajouté une fonctionnalité importante au programme, permettant de marquer les tâches comme terminées et de les afficher séparément si nécessaire. La clarté du paramètre `--done` et les principes SOLID ont été maintenus tout au long du processus d'amélioration du code.

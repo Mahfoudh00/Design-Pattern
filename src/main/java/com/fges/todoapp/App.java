@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.cli.*;
 
@@ -12,9 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class App {
 
@@ -24,48 +21,62 @@ public class App {
 
     // Fonction principale pour l'exécution des commandes
     public static int exec(String[] args) throws IOException {
+        // Créer les options de la ligne de commande
         Options cliOptions = createCliOptions();
+        // Initialiser le parseur de ligne de commande
         CommandLineParser parser = new DefaultParser();
 
         CommandLine cmd;
         try {
+            // Parser les arguments de la ligne de commande
             cmd = parser.parse(cliOptions, args);
         } catch (ParseException ex) {
+            // Gestion des erreurs liées à la ligne de commande
             handleParseException(ex);
             return 1;
         }
 
+        // Récupérer le nom du fichier à partir des options
         String fileName = cmd.getOptionValue("s");
 
+        // Récupérer les arguments positionnels
         List<String> positionalArgs = cmd.getArgList();
         if (positionalArgs.isEmpty()) {
             System.err.println("Missing Command");
             return 1;
         }
 
+        // Récupérer la commande à partir des arguments
         String command = positionalArgs.get(0);
 
+        // Créer le chemin du fichier à partir du nom du fichier
         Path filePath = Paths.get(fileName);
 
+        // Lire le contenu du fichier
         String fileContent = readFileContent(filePath);
 
+        // Initialiser le gestionnaire de tâches
         TodoFileManager todoFileManager = new TodoFileManager(filePath, fileContent);
 
         if (command.equals("insert")) {
+            // Vérifier si l'option --done est présente
             boolean isDone = cmd.hasOption("d");
-            handleInsertCommand(positionalArgs, fileName, fileContent, filePath, todoFileManager, isDone);
+            // Gérer la commande 'insert'
+            handleInsertCommand(positionalArgs, todoFileManager, isDone);
         }
 
         if (command.equals("list")) {
+            // Vérifier si l'option --done est présente
             boolean showDone = cmd.hasOption("d");
-            handleListCommand(fileName, fileContent, todoFileManager, showDone);
+            // Gérer la commande 'list'
+            handleListCommand(todoFileManager, showDone);
         }
 
         System.err.println("Done.");
         return 0;
     }
 
-    // Options de la ligne de commande
+    // Créer les options de la ligne de commande
     private static Options createCliOptions() {
         Options cliOptions = new Options();
         cliOptions.addRequiredOption("s", "source", true, "File containing the todos");
@@ -73,12 +84,12 @@ public class App {
         return cliOptions;
     }
 
-    // Gestion des exceptions lors de l'analyse des arguments
+    // Gérer les exceptions lors de l'analyse des arguments
     private static void handleParseException(ParseException ex) {
         System.err.println("Fail to parse arguments: " + ex.getMessage());
     }
 
-    // Lecture du contenu du fichier
+    // Lire le contenu du fichier
     private static String readFileContent(Path filePath) throws IOException {
         String fileContent = "";
         if (Files.exists(filePath)) {
@@ -87,8 +98,8 @@ public class App {
         return fileContent;
     }
 
-    // Gestion de la commande 'insert'
-    private static void handleInsertCommand(List<String> positionalArgs, String fileName, String fileContent, Path filePath, TodoFileManager todoFileManager, boolean isDone) throws IOException {
+    // Gérer la commande 'insert'
+    private static void handleInsertCommand(List<String> positionalArgs, TodoFileManager todoFileManager, boolean isDone) throws IOException {
         if (positionalArgs.size() < 2) {
             System.err.println("Missing TODO name");
             return;
@@ -98,8 +109,8 @@ public class App {
         todoFileManager.insertTodo(todo, isDone);
     }
 
-    // Gestion de la commande 'list'
-    private static void handleListCommand(String fileName, String fileContent, TodoFileManager todoFileManager, boolean showDone) {
+    // Gérer la commande 'list'
+    private static void handleListCommand(TodoFileManager todoFileManager, boolean showDone) {
         todoFileManager.listTodos(showDone);
     }
 
@@ -125,12 +136,7 @@ public class App {
 
         // Méthode privée pour gérer l'insertion dans les fichiers JSON
         private void handleJsonInsert(String todo, boolean isDone) throws IOException {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode actualObj = mapper.readTree(fileContent);
-            if (actualObj instanceof MissingNode) {
-                actualObj = JsonNodeFactory.instance.arrayNode();
-            }
-
+            JsonNode actualObj = new ObjectMapper().readTree(fileContent);
             if (actualObj instanceof ArrayNode arrayNode) {
                 ObjectNode todoNode = JsonNodeFactory.instance.objectNode();
                 todoNode.put("task", todo);
@@ -144,15 +150,16 @@ public class App {
 
         // Méthode privée pour gérer la liste dans les fichiers JSON avec l'option --done
         private void handleJsonList(boolean showDone) {
-            ObjectMapper mapper = new ObjectMapper();
             JsonNode actualObj = parseJsonNode();
             if (actualObj instanceof ArrayNode arrayNode) {
                 arrayNode.forEach(node -> {
                     boolean isDone = node.get("done").asBoolean();
                     String task = node.get("task").asText();
 
-                    if (showDone || (!showDone && !isDone)) {
-                        System.out.println("- " + (isDone ? "[Done] " : "") + task);
+                    if (showDone && isDone) {
+                        System.out.println("- [Done] " + task);
+                    } else if (!showDone && !isDone) {
+                        System.out.println("- " + task);
                     }
                 });
             }
@@ -169,17 +176,12 @@ public class App {
 
         // Méthode privée pour lire et parser le contenu JSON
         private JsonNode parseJsonNode() {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode actualObj = null;
             try {
-                actualObj = mapper.readTree(fileContent);
+                return new ObjectMapper().readTree(fileContent);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (actualObj instanceof MissingNode) {
-                actualObj = JsonNodeFactory.instance.arrayNode();
-            }
-            return actualObj;
+            return JsonNodeFactory.instance.arrayNode(); // Par défaut, retourne un tableau JSON vide en cas d'erreur
         }
     }
 }

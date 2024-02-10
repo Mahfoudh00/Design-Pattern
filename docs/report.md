@@ -83,3 +83,34 @@ Le code a été commenté pour expliquer les modifications apportées, en partic
 
 ## Conclusion
 Cette itération a ajouté une fonctionnalité importante au programme, permettant de marquer les tâches comme terminées et de les afficher séparément si nécessaire. La clarté du paramètre `--done` et les principes SOLID ont été maintenus tout au long du processus d'amélioration du code.
+
+
+
+# Rapport sur les Modifications de Code
+
+## Objectif
+L'objectif principal des modifications était d'ajouter la fonctionnalité de marquer une tâche comme terminée et de filtrer les tâches effectuées lors de l'affichage. De plus, des ajustements ont été apportés pour respecter les bonnes pratiques de conception Java.
+
+## Travaux Réalisés
+- **Ajout de la fonctionnalité `--done`:** Un nouveau paramètre CLI a été ajouté pour indiquer si une tâche est terminée lors de l'ajout.
+- **Filtrage lors de l'affichage:** Lors de l'affichage des tâches, l'option `--done` permet de montrer uniquement les tâches effectuées.
+- **Restructuration de la classe `TodoFileManager`:** Des modifications ont été apportées pour améliorer la lisibilité et la maintenabilité, tout en respectant les principes SOLID.
+
+## Ce qui a Aidé
+- **Options de la ligne de commande:** L'utilisation de la bibliothèque Apache Commons CLI a facilité la gestion des arguments de la ligne de commande.
+- **Principes SOLID:** Les principes SOLID ont guidé la restructuration de la classe `TodoFileManager`, contribuant à une conception plus propre.
+
+## Difficultés Rencontrées
+- **Gestion des fichiers JSON:** Bien que la gestion des fichiers JSON ait été étendue pour inclure l'état des tâches, elle a ajouté une complexité supplémentaire.
+
+## Ce qui n'a pas Aidé
+- **Utilisation de méthodes statiques:** L'utilisation excessive de méthodes statiques a été conservée dans certaines parties du code, ce qui peut nuire à la flexibilité et à l'extensibilité.
+
+## Changements Apportés
+- **Classe `TodoFileManager`:** Des améliorations ont été apportées pour mieux respecter les principes SOLID, mais des opportunités subsistent pour réduire davantage la complexité.
+
+## Architecture
+
+## Conclusion
+Ces modifications visent à étendre les fonctionnalités de l'application de gestion de tâches en permettant le marquage des tâches comme terminées et en fournissant un filtrage basé sur l'état des tâches. Des efforts ont été faits pour améliorer la qualité du code en respectant les principes de conception Java.
+

@@ -114,3 +114,33 @@ L'objectif principal des modifications était d'ajouter la fonctionnalité de ma
 ## Conclusion
 Ces modifications visent à étendre les fonctionnalités de l'application de gestion de tâches en permettant le marquage des tâches comme terminées et en fournissant un filtrage basé sur l'état des tâches. Des efforts ont été faits pour améliorer la qualité du code en respectant les principes de conception Java.
 
+# Rapport sur les Modifications de Code
+
+## Objectif
+L'objectif initial était d'améliorer la lisibilité et la maintenabilité du code en appliquant les principes SOLID. De plus, des fonctionnalités supplémentaires ont été ajoutées pour prendre en compte les migrations de tâches entre différents gestionnaires de todos.
+
+## Travaux Réalisés
+Les principales modifications apportées sont les suivantes :
+- **Refactorisation du Code :** Les différentes parties du code ont été organisées en plusieurs classes pour suivre le principe de responsabilité unique.
+- **Ajout de Nouvelles Fonctionnalités :** Une nouvelle commande "migrate" a été introduite pour migrer les tâches d'un gestionnaire de todos vers un autre.
+- **Création de Nouvelles Classes :** Plusieurs classes ont été ajoutées pour mieux structurer le code, dont `CommandLineHandler`, `CsvTodoManager`, `JsonTodoManager`, `FileHandler`, `Todo`, `TodoManager`, et `TodoPrinter`.
+
+## Ce qui a Aidé
+- **Principes SOLID :** Les principes SOLID ont guidé la réorganisation du code en classes distinctes avec des responsabilités claires.
+- **Nouvelles Fonctionnalités :** L'ajout de la fonctionnalité de migration a été facilité par la conception modulaire.
+
+## Difficultés Rencontrées
+- **Paramètres en Double :** La gestion des paramètres et options en double dans le cadre de la nouvelle fonctionnalité a nécessité une attention particulière.
+
+## Ce qui n'a pas Aidé
+- **Nom de Paramètres :** Quelques avertissements concernant les paramètres non utilisés persistent. Cela est souvent dû au besoin de respecter les conventions de certaines bibliothèques.
+
+## Changements Apportés
+- **Réorganisation en Classes :** Le code a été structuré en plusieurs classes, chacune ayant une responsabilité spécifique.
+- **Ajout de la Commande "Migrate" :** La nouvelle commande "migrate" permet de migrer les tâches entre gestionnaires de todos.
+
+## Architecture
+La nouvelle architecture suit les principes SOLID, en particulier le principe de responsabilité unique. Chaque classe a une fonctionnalité clairement définie.
+
+## Conclusion
+Les modifications apportées ont considérablement amélioré la structure et la flexibilité du code. L'introduction de nouvelles fonctionnalités a été réalisée en respectant les principes SOLID, rendant le code plus extensible pour de futures évolutions. Les commentaires ont été ajoutés pour faciliter la compréhension du code par les développeurs.
